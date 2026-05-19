@@ -1,0 +1,5 @@
+python-benedict[yaml] >= 0.25.0
+prompt_toolkit >= 3.0.28
+numpy
+matplotlib
+pdoc
