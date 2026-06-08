@@ -13,6 +13,10 @@
 # ─────────────────────────────────────────────────────────────────────────────
 FROM debian:bookworm-slim
 
+LABEL org.opencontainers.image.source="https://github.com/JHeinzde/teem-exercise"
+LABEL org.opencontainers.image.description="RISC-V / Clang 17 cross-compilation image for teem-exercise"
+LABEL org.opencontainers.image.licenses="GPL-2.0-only"
+
 # Keep apt non-interactive
 ARG DEBIAN_FRONTEND=noninteractive
 
