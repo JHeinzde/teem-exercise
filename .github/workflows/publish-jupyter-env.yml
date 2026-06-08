@@ -1,14 +1,12 @@
-name: Publish riscv-clang image
+name: Publish jupyter-env image
 
 on:
   push:
     branches: [master]
     paths:
-      - "demo-power/Dockerfile"
-      - "demo-power/Makefile"
-      - "demo-power/cpuemu.h"
-      - "demo-power/aes-*.s"
-      - ".github/workflows/publish-riscv-clang.yml"
+      - "demo-power/Dockerfile.jupyter"
+      - "requirements.txt"
+      - ".github/workflows/publish-jupyter-env.yml"
     tags: ["v*"]
   workflow_dispatch:
 
@@ -32,7 +30,7 @@ jobs:
       - id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}/riscv-clang
+          images: ghcr.io/${{ github.repository }}/jupyter-env
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
@@ -41,7 +39,8 @@ jobs:
 
       - uses: docker/build-push-action@v6
         with:
-          context: ./demo-power
+          context: .
+          file: demo-power/Dockerfile.jupyter
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
