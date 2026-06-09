@@ -1,69 +1,49 @@
-# TEEM - A CPU Emulator with Transient Execution
+# TEEM Power Side-Channel Exercise
 
-[Open Access Paper: TEEM: A CPU Emulator for Teaching Transient Execution Attacks (2024)](https://doi.org/10.18420/sicherheit2024_013)
+This exercise walks you through **power-based side-channel attacks** — Differential
+Power Analysis (DPA), Correlation Power Analysis (CPA), and defeating a simple
+timing countermeasure — against an AES implementation running on the TEEM CPU
+emulator. You work through it entirely in a Jupyter notebook.
 
-[TEEM in Action: Exploring the Meltdown example](https://github.com/teem-cpu/teem/assets/13750291/248926e1-c0eb-466d-8c44-06fcdef33cb7)
+**Prerequisite:** a working [Docker](https://docs.docker.com/get-docker/)
+installation. Nothing else needs to be installed on your machine.
 
-## System requirements and installation
+## Step 1 — Get the two prebuilt images
 
-The following things need to be installed to run TEEM:
-
-- Python >= 3.8
-- Python-Benedict
-- Python-Prompt-Toolkit
-
-To install the required packages, one may use the following command:
-
-```
-pip install -r requirements.txt
+```sh
+docker pull ghcr.io/jheinzde/teem-exercise/jupyter-env:latest
+docker pull ghcr.io/jheinzde/teem-exercise/riscv-clang:latest
 ```
 
-### Performance 
+- `jupyter-env` runs JupyterLab (with PyPy) for the exercise notebook.
+- `riscv-clang` cross-compiles the AES C code into the RISC-V assembly the emulator runs.
 
-If you want to run code like a cryptographic algorithm with this simulator, to use its power trace generation capabilities we strongly recommend 
-that you use the PyPy python implementation instead of regular cypthon. The reason for this is, that regular cpython is really slow which can make 
-a big difference when running a cryptographic algorithm and needing to generate a lot of traces, to do a power-analysis-based side channel attack 
-on it. You can approximatly expect a 2x speedup when running this emulator using PyPy instead of using cPython. 
+## Step 2 — Launch JupyterLab
 
-## Running the program
+From the **repository root**:
 
-The syntax for running TEEM from the root folder of the repository is:
-
-```
-./main.py <path_to_target_program>
-```
-
-On Windows systems, the following command should be used instead:
-
-```
-python main.py <path_to_target_program>
+```sh
+docker run --rm -it \
+  -p 127.0.0.1:8888:8888 \
+  -v "$(pwd)":/work \
+  --user "$(id -u):$(id -g)" \
+  ghcr.io/jheinzde/teem-exercise/jupyter-env:latest
 ```
 
-There are demo programs available in the `demo` folder, including sample attacks using meltdown and spectre.
+Then open <http://localhost:8888> and open **`Exercise.ipynb`**.
 
-The syntax of programs accepted by the emulator is described in [doc/assembly.md](doc/assembly.md) and [doc/isa.md](doc/isa.md).
+## Step 3 — Follow the notebook top to bottom
 
-## Configuration
+The notebook guides you through everything else: instrumenting the bundled AES
+project in `micro-aes-template/`, compiling it with the `riscv-clang` image,
+running the emulator to capture power traces, and carrying out the DPA, CPA, and
+cross-correlation attacks. Run the cells in order.
 
-Edit `config.yml` to change the default settings.
+## If something breaks
 
-## Compiling C code
-
-TEEM is able to run RISC-V assembly compiled from C code.
-
-For successful compilation you need [`clang 17+`](https://releases.llvm.org/download.html) and can utilize the [`Makefile`](demo/Makefile) in the `demo` directory.
-
-## Copyright & License
-
-Copyright (C) 2022 Felix Betke, Lennart Hein, Melina Hoffmann, Jan-Niklas Sohn
-
-Copyright (C) 2023 Maxim Shevchishin
-
-SPDX-License-Identifier: GPL-2.0-or-later
-
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You may obtain a copy of the License in the `LICENSE.txt` file, or at: <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>
-
+- **Prefer a native toolchain over Docker?** See
+  [`demo-power/INSTALL_TOOLCHAIN.md`](demo-power/INSTALL_TOOLCHAIN.md).
+- **Emulator reference** (CLI, `config.yml`, compiling C, license/copyright): see
+  [`doc/emulator.md`](doc/emulator.md).
+- **Can't compile?** `demo-power/` ships prebuilt `.s` programs as a fallback —
+  see [`demo-power/README.md`](demo-power/README.md).

@@ -1,12 +1,15 @@
 # RISC-V Clang 17+ Toolchain Installation Guide
 
-> **You usually don't need this.** The recommended path for the exercise uses the
-> prebuilt Docker images — see the [root README](../README.md). This guide is only
-> for running the RISC-V toolchain natively on your machine.
+> **You usually don't need this.** The recommended path for the exercise pulls the
+> prebuilt Docker images — see the [root README](../README.md). This guide is for
+> running the RISC-V toolchain yourself: either by building the Docker image locally
+> (below), or installing it natively for your distribution.
 
-## Docker (quickest option)
+## Docker — build the image yourself
 
-A `Dockerfile` is included in this repository. It builds a self-contained image based on `debian:bookworm-slim` with clang 17 and the RISC-V ELF cross-compiler already wired up — no host toolchain installation required.
+If you'd rather build the image than pull the prebuilt one, the included
+`Dockerfile` produces an equivalent: a self-contained `debian:bookworm-slim` image
+with clang 17 and the RISC-V ELF cross-compiler. No host toolchain installation required.
 
 ### Build the image
 
@@ -134,13 +137,7 @@ sudo apt install gcc-riscv64-unknown-elf picolibc-riscv64-unknown-elf
 
 ### 3. Find the sysroot path
 
-The sysroot location on Debian/Ubuntu differs from the Makefile default. Find it with:
-
-```sh
-dpkg -L gcc-riscv64-unknown-elf | grep 'riscv64-unknown-elf/include' | head -1
-```
-
-The path is typically `/usr/riscv64-unknown-elf` or a sub-path under `/usr/lib/gcc-cross/`. A reliable way to extract the sysroot root is:
+The Debian/Ubuntu sysroot differs from the Makefile default. Get it with:
 
 ```sh
 riscv64-unknown-elf-gcc -print-sysroot
