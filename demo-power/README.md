@@ -1,5 +1,8 @@
 # `demo-power` — assembly demos and container images
 
+> New here? Start with the [root README](../README.md) for the quickstart. This
+> document is the deeper reference for the container images and demo programs.
+
 This directory contains:
 
 - A small library of sample AES assembly programs you can run inside the
@@ -90,7 +93,3 @@ on every push to `master` that touches `Dockerfile.jupyter` or the repo-root
 ```bash
 docker pull ghcr.io/jheinzde/teem-exercise/jupyter-env:latest
 ```
-
-The first publish requires a one-time UI step to flip the package
-visibility from private to public at
-<https://github.com/JHeinzde?tab=packages>.

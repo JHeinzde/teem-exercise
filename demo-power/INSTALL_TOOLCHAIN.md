@@ -1,5 +1,9 @@
 # RISC-V Clang 17+ Toolchain Installation Guide
 
+> **You usually don't need this.** The recommended path for the exercise uses the
+> prebuilt Docker images — see the [root README](../README.md). This guide is only
+> for running the RISC-V toolchain natively on your machine.
+
 ## Docker (quickest option)
 
 A `Dockerfile` is included in this repository. It builds a self-contained image based on `debian:bookworm-slim` with clang 17 and the RISC-V ELF cross-compiler already wired up — no host toolchain installation required.
